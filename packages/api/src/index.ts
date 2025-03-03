@@ -1,11 +1,11 @@
-import Fastify from 'fastify';
+import Fastify from "fastify";
 
 const fastify = Fastify({
   logger: true,
 });
 
-fastify.get('/', async (request, reply) => {
-  return { hello: 'world' };
+fastify.get("/", async (request, reply) => {
+  return { hello: "world" };
 });
 
 const start = async () => {
@@ -17,4 +17,4 @@ const start = async () => {
   }
 };
 
-start(); 
+start();

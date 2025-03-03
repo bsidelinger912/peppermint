@@ -1,0 +1,6 @@
+{
+  "eslint.useFlatConfig": true,
+  "eslint.nodePath": "/Users/benny/git/peppermint/node_modules",
+  "editor.formatOnSave": true,
+  "files.autoSaveWhenNoErrors": false
+}
