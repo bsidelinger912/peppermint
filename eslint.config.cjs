@@ -22,40 +22,26 @@ module.exports = [
     },
     rules: {
       ...tseslint.configs.recommended.rules,
-      // ...svelte.configs.recommended.rules,
-      'svelte/comment-directive': 'error',
-      'svelte/no-at-debug-tags': 'warn',
-      'svelte/no-at-html-tags': 'error',
-      'svelte/no-dupe-else-if-blocks': 'error',
-      'svelte/no-dupe-style-properties': 'error',
-      'svelte/no-dynamic-slot-name': 'error',
-      'svelte/no-inner-declarations': 'error',
-      'svelte/no-not-function-handler': 'error',
-      'svelte/no-object-in-text-mustaches': 'error',
-      'svelte/no-shorthand-style-property-overrides': 'error',
-      'svelte/no-unknown-style-directive-property': 'error',
-      'svelte/no-unused-svelte-ignore': 'error',
-      'svelte/system': 'error',
-      'svelte/valid-compile': 'error'
+      ...svelte.configs.recommended.rules,
     }
   },
-  // {
-  //   files: ['packages/web/**/*.ts', '**/*.svelte'],
-  //   languageOptions: {
-  //     parser: tsparser,
-  //     parserOptions: {
-  //       sourceType: 'module',
-  //       ecmaVersion: 2020,
-  //       extraFileExtensions: ['.svelte']
-  //     }
-  //   },
-  //   plugins: {
-  //     '@typescript-eslint': tseslint
-  //   },
-  //   settings: {
-  //     'svelte/typescript': () => typescript
-  //   }
-  // },
+  {
+    files: ['packages/web/**/*.ts', '**/*.svelte'],
+    languageOptions: {
+      parser: tsparser,
+      parserOptions: {
+        sourceType: 'module',
+        ecmaVersion: 2020,
+        extraFileExtensions: ['.svelte']
+      }
+    },
+    plugins: {
+      '@typescript-eslint': tseslint
+    },
+    settings: {
+      'svelte/typescript': () => typescript
+    }
+  },
   {
     files: ['packages/web/**/*.svelte'],
     languageOptions: {
@@ -65,13 +51,7 @@ module.exports = [
       }
     }
   },
-  // {
-  //   linterOptions: {
-  //     reportUnusedDisableDirectives: true,
-  //     fix: true // Allow auto-fixing
-  //   }
-  // },
   {
-    ignores: ['eslint.config.cjs']
+    ignores: ['eslint.config.cjs', 'packages/web/.svelte-kit']
   }
 ];
