@@ -1,15 +1,15 @@
-import { router, Redirect } from 'expo-router';
-import { Text, View } from 'react-native';
+import { router, Redirect } from "expo-router";
+import { Text, View } from "react-native";
 import Button from "@/components/Button";
 
-import { useSession } from '../hooks/auth-context';
-import Hero from '@/components/layout/Hero';
+import { useSession } from "../hooks/auth-context";
+import Hero from "@/components/layout/Hero";
 
 export default function SignIn() {
   const { signIn } = useSession();
 
   return <Redirect href="/login" />;
-  
+
   // return (
   //   <>
   //     <Hero />

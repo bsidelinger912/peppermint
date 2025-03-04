@@ -7,7 +7,6 @@ const prettierPlugin = require('eslint-plugin-prettier/recommended');
 const svelte = require('eslint-plugin-svelte');
 const svelteParser = require('svelte-eslint-parser');
 const react = require('eslint-plugin-react');
-// const globals = require('globals');
 // const { FlatCompat } = require('@eslint/eslintrc');
 // // const { fixupConfigRules } = require("@eslint/compat");
 // const expo = require("eslint-config-expo");
@@ -49,7 +48,8 @@ module.exports = [
       },
       globals: {
         process: true,
-        // ...globals.browser,
+        console: true,
+        setInterval: true,
       },
     },
     rules: {
