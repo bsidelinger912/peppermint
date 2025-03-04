@@ -26,6 +26,7 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
+		"@supabase/supabase-js": "^2.49.1",
 		"svelte-ionicons": "^2.0.1"
 	}
 }
