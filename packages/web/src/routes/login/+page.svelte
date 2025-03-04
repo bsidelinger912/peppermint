@@ -42,10 +42,13 @@
         loggingInPassword.set(true);
         if (login) {
           const result = await signIn(emailValue as string, passwordValue as string);
+
+          // TODO: redirect to app with session, which can be used to supabase.auth.setSession()
           console.log(result.session);
-          // result
         } else {
           const result = await signUp(emailValue as string, passwordValue as string);
+
+          // TODO: redirect to app with session, which can be used to supabase.auth.setSession()
           console.log(result.session);
         }
       } catch (e) {
