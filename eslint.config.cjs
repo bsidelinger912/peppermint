@@ -56,7 +56,10 @@ module.exports = [
         sourceType: 'module',
         ecmaVersion: 2020,
         extraFileExtensions: ['.svelte']
-      }
+      },
+      globals: {
+        window: true,
+      },
     },
     plugins: {
       '@typescript-eslint': tseslint

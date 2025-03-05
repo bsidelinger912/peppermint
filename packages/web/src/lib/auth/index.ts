@@ -1,7 +1,8 @@
 import { getContext, setContext } from "svelte";
 import { supabase } from "$lib/supabase";
-import type { User, Session } from "@supabase/supabase-js";
+import type { User, Session, EmailOtpType } from "@supabase/supabase-js";
 import { writable, type Writable } from "svelte/store";
+import { browser } from "$app/environment";
 
 type SignInResult = {
   user: User;
@@ -17,7 +18,40 @@ interface AuthContext {
 
 const AUTH_CONTEXT_KEY = Symbol();
 
+// async function verifyOtp(token_hash: string, type: EmailOtpType) {
+//   console.log("vefying", token_hash, type);
+//   const { error, data } = await supabase.auth.verifyOtp({ token_hash, type });
+
+//   if (!error && data && data.session) {
+//     console.log("******* redirect *******");
+//     console.log(data.session);
+//   }
+// }
+
 export function setAuthContext() {
+  if (browser) {
+    const hash = window.location.hash;
+    if (hash) {
+      const params = new URLSearchParams(hash.slice(1));
+      const token = params.get("access_token");
+      const refreshToken = params.get("refresh_token");
+      // const type = params.get("type") as EmailOtpType;
+
+      if (token && refreshToken) {
+        // verifyOtp(token, type);
+      }
+
+      // const accessToken = params.get("access_token");
+      // const refreshToken: Parameters.get()
+      // if (accessToken) {
+      //   supabase.auth.setSession({
+      //     access_token: accessToken,
+      //     refresh_token: params.get("refresh_token") ?? "",
+      //   });
+      // }
+    }
+  }
+
   const user = writable<User | null>(null);
 
   setContext<AuthContext>(AUTH_CONTEXT_KEY, {
