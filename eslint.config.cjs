@@ -41,6 +41,7 @@ module.exports = [
         process: true,
         console: true,
         setInterval: true,
+        React: true
       },
     },
     rules: {
