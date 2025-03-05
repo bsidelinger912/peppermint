@@ -1,19 +1,16 @@
-import { Stack, Link } from "expo-router";
+import { Stack } from "expo-router";
 import { View, Text } from "react-native";
 
-import { Button } from "~/components/Button";
-import { Container } from "~/components/Container";
+// import { Button } from "~/components/Button";
 import Hero from "~/components/layout/Hero";
-import { ScreenContent } from "~/components/ScreenContent";
+// import { ScreenContent } from "~/components/ScreenContent";
 
 export default function Home() {
   return (
     <View>
       <Stack.Screen options={{ headerShown: false }} />
       <Hero />
-      <Container>
-        <Text>yoyo</Text>
-      </Container>
+      <Text>yoyo</Text>
     </View>
   );
 }
