@@ -3,31 +3,23 @@
     "name": "peppermint",
     "slug": "peppermint",
     "version": "1.0.0",
-    
-    
-      "scheme": "peppermint",
-      "web": {
-        "bundler": "metro",
-        "output": "static",
-        "favicon": "./assets/favicon.png"
-      },
-      "plugins": [
-      "expo-router"
-      
-      
+    "scheme": "peppermint",
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
     ],
-      "experiments": {
-        "typedRoutes": true
-        
-          ,"tsconfigPaths": true
-        
-      },
-    
+    "experiments": {
+      "typedRoutes": true,
+      "tsconfigPaths": true
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    
-     "userInterfaceStyle": "light",
-    
+    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -37,7 +29,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bsidelinger912.peppermint"
     },
     "android": {
       "adaptiveIcon": {

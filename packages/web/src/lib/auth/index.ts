@@ -38,6 +38,8 @@ export function setAuthContext() {
       // const type = params.get("type") as EmailOtpType;
 
       if (token && refreshToken) {
+        console.log("have token, redirecting", token, refreshToken);
+        window.location.href = `peppermint://?token=${token}&refresh_token=${refreshToken}`;
         // verifyOtp(token, type);
       }
 

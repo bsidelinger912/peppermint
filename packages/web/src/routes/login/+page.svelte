@@ -4,9 +4,31 @@
 
   import Button from "$lib/components/ds/button/index.svelte";
   import HeroLayout from "$lib/layout/hero-layout.svelte";
+  import { supabase } from "$lib/supabase";
+
   import EmailLogin from "./email-login.svelte";
+  import { LogoGoogle } from "svelte-ionicons";
 
   const loginMethod = writable<"email" | undefined>();
+
+  async function loginWithGoogle() {
+    const params = new URLSearchParams(window.location.search);
+
+    // todo: validate redirect
+    const redirectUrl = encodeURIComponent(params.get("redirect") ?? "");
+
+    try {
+      supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `http://localhost:5173?redirect=${redirectUrl}`,
+        },
+      });
+    } catch (e) {
+      // eslint-disable-next-line no-undef
+      console.error("error logging in with google", e);
+    }
+  }
 
   // const loggingInPassword = writable(false);
   // const emailError = writable<string | undefined>(undefined);
@@ -62,7 +84,7 @@
 </script>
 
 <HeroLayout>
-  <div class="flex flex-col gap-6 max-w-[600px] mx-auto">
+  <div class="flex flex-col gap-4 max-w-[600px] mx-auto">
     {#if $loginMethod === "email"}
       <EmailLogin />
     {:else}
@@ -70,6 +92,13 @@
         <div class="flex items-center justify-center gap-4 text-lg">
           <Mail />
           Log in with email
+        </div>
+      </Button>
+
+      <Button on:click={loginWithGoogle}>
+        <div class="flex items-center justify-center gap-4 text-lg">
+          <LogoGoogle />
+          Log in with google
         </div>
       </Button>
     {/if}
