@@ -1,9 +1,9 @@
 <script lang="ts">
   import "../app.css";
+  import { setAuthContext } from "$lib/auth";
   let { children } = $props();
+
+  setAuthContext();
 </script>
 
-<div>
-  <div>Heading</div>
-  {@render children()}
-</div>
+{@render children()}

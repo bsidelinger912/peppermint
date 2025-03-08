@@ -1,23 +1,18 @@
-import { Slot } from "expo-router";
-import { useEffect } from "react";
-import * as Linking from "expo-linking";
-
-import { SessionProvider } from "../hooks/auth-context";
+import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context";
+import { EventProvider } from "react-native-outside-press";
+import AuthProvider from "~/components/auth/AuthProvider";
 import "../global.css";
 
-export default function Root() {
-  // Set up the auth context and render our layout inside of it.
-  useEffect(() => {
-    const subscription = Linking.addEventListener("url", ({ url }) => {
-      // Handle deep links
-    });
+import { Stack } from "expo-router";
 
-    return () => subscription.remove();
-  }, []);
-
+export default function Layout() {
   return (
-    <SessionProvider>
-      <Slot />
-    </SessionProvider>
+    <AuthProvider>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <EventProvider>
+          <Stack />
+        </EventProvider>
+      </SafeAreaProvider>
+    </AuthProvider>
   );
 }

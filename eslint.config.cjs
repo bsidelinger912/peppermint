@@ -7,15 +7,6 @@ const prettierPlugin = require('eslint-plugin-prettier/recommended');
 const svelte = require('eslint-plugin-svelte');
 const svelteParser = require('svelte-eslint-parser');
 const react = require('eslint-plugin-react');
-// const { FlatCompat } = require('@eslint/eslintrc');
-// // const { fixupConfigRules } = require("@eslint/compat");
-// const expo = require("eslint-config-expo");
-
-// const compat = new FlatCompat({
-//   baseDirectory: __dirname,
-// });
-
-// console.log(expo);
 
 module.exports = [
   eslint.configs.recommended,
@@ -50,6 +41,7 @@ module.exports = [
         process: true,
         console: true,
         setInterval: true,
+        React: true
       },
     },
     rules: {
@@ -65,7 +57,10 @@ module.exports = [
         sourceType: 'module',
         ecmaVersion: 2020,
         extraFileExtensions: ['.svelte']
-      }
+      },
+      globals: {
+        window: true,
+      },
     },
     plugins: {
       '@typescript-eslint': tseslint

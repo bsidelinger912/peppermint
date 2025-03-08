@@ -1,17 +1,24 @@
-import { Pressable, Text } from "react-native";
+import { forwardRef } from "react";
+import { Text, TouchableOpacity, TouchableOpacityProps, View } from "react-native";
 
-export type ButtonProps = {
+type ButtonProps = {
   title: string;
-  onPress: () => void;
-  // loading: boolean;
-  // disabled: boolean;
-  // size: "small" | "medium" | "large";
-};
+} & TouchableOpacityProps;
 
-export default function PeppermintButton({ title, onPress }: ButtonProps) {
+// eslint-disable-next-line react/display-name
+export const Button = forwardRef<View, ButtonProps>(({ title, ...touchableProps }, ref) => {
   return (
-    <Pressable className="p-4 border rounded-lg bg-slate-700" onPress={onPress}>
-      <Text className="text-white">{title}</Text>
-    </Pressable>
+    <TouchableOpacity
+      ref={ref}
+      {...touchableProps}
+      className={`${styles.button} ${touchableProps.className}`}
+    >
+      <Text className={styles.buttonText}>{title}</Text>
+    </TouchableOpacity>
   );
-}
+});
+
+const styles = {
+  button: "items-center bg-indigo-500 rounded-[28px] shadow-md p-4",
+  buttonText: "text-white text-lg font-semibold text-center",
+};
