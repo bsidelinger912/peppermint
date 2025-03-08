@@ -15,7 +15,7 @@ export type Props = {
   isDark?: boolean;
 };
 
-export default function HeroContents({ children, hasImage, isDark = false }: Props) {
+export default function HeroContents({ children, hasImage }: Props) {
   const { user } = useAuthContext();
   const router = useRouter();
   const { top } = useSafeAreaInsets();
@@ -24,22 +24,22 @@ export default function HeroContents({ children, hasImage, isDark = false }: Pro
     <SafeAreaView>
       <View className="relative flex flex-col items-center justify-center">
         {router.canGoBack() && (
-          <View className="absolute left-2 top-0">
+          <View className="absolute left-2 top-0 z-20">
             <TouchableOpacity
               onPress={() => {
                 router.back();
-                console.log("**** TODO: figure out why we're not getting the touch event");
               }}
-              className="rounded-full p-0 relative"
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              className="rounded-full relative"
             >
               {hasImage && <View className="rounded-full w-7 h-7 bg-black absolute top-1 left-1" />}
-              <Ionicons name="chevron-back-circle" size={32} color={isDark ? "black" : "white"} />
+              <Ionicons name="chevron-back-circle" size={32} color="white" />
             </TouchableOpacity>
           </View>
         )}
 
         {children ? (
-          <View style={{ height: 250 - top }} className="relative w-full">
+          <View style={{ height: 250 - top }} className="relative w-full z-10">
             {children}
           </View>
         ) : (
@@ -54,7 +54,7 @@ export default function HeroContents({ children, hasImage, isDark = false }: Pro
         )}
 
         {user && (
-          <View className="absolute right-2 top-0">
+          <View className="absolute right-2 top-0 z-20">
             <UserMenu image={hasImage} />
           </View>
         )}
