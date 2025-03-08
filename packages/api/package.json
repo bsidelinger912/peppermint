@@ -1,5 +1,5 @@
 {
-  "name": "@ts-monorepo/api",
+  "name": "@peppermint/api",
   "version": "1.0.0",
   "private": true,
   "scripts": {
@@ -15,4 +15,4 @@
     "tsx": "^4.x",
     "typescript": "^5.x"
   }
-} 
+}
