@@ -12,15 +12,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const url = useURL();
 
   async function logout() {
-    setUser(undefined);
-
-    try {
-      await SecureStore.deleteItemAsync(SESSION_STORAGE_KEY);
-
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-      // todo: handle this
-    }
+    supabase.auth.signOut();
   }
 
   async function setSession(session: Pick<Session, "access_token" | "refresh_token">) {
@@ -31,6 +23,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     }
 
     setUser(data.user);
+    storeSession(session);
   }
 
   async function storeSession(session: Pick<Session, "access_token" | "refresh_token">) {
@@ -44,17 +37,26 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       try {
         const session = JSON.parse(storedSession) as Session;
         setSession(session);
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (e) {
         // failed to parse key, todo: do something here
+        console.error("Error hydrating session", (e as Error).message);
       }
     }
   }
 
   useEffect(() => {
+    supabase.auth.onAuthStateChange(async (event, session) => {
+      if (event === "TOKEN_REFRESHED") {
+        if (session) {
+          storeSession(session);
+        }
+      } else if (event === "SIGNED_OUT") {
+        setUser(undefined);
+        await SecureStore.deleteItemAsync(SESSION_STORAGE_KEY);
+      }
+    });
+
     if (url) {
-      console.log("*********", url);
       // check for login creds on the url
       const { queryParams } = parse(url);
 
@@ -64,10 +66,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       if (access_token && refresh_token) {
         try {
           setSession({ access_token, refresh_token });
-          storeSession({ access_token, refresh_token });
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
-          // todo: do something here
+          // todo: do something better here
+          console.error("Error initiating session", (e as Error).message);
         }
       }
     } else {
