@@ -13,6 +13,7 @@ import Hero from "~/components/layout/Hero";
 import AddToQueue from "~/components/svg/AddToQueue";
 import { formatDuration } from "~/utils/formatting";
 import { AlbumDownloadButton } from "~/components/AlbumDownloadButton";
+import SongRow from "~/components/SongRow";
 
 type QueryResult = Album & {
   song_to_album: {
@@ -46,13 +47,6 @@ export default function AlbumScreen() {
       track_number,
     }))
     .sort((a, b) => a.track_number - b.track_number);
-
-  function goToSong(songId: number) {
-    router.push({
-      pathname: "/song/[id]",
-      params: { id: songId },
-    });
-  }
 
   function goToArtist(artistId: number) {
     router.push({
@@ -125,23 +119,7 @@ export default function AlbumScreen() {
             <View className="gap-4">
               {sortedSongs &&
                 sortedSongs.map((song, i) => (
-                  <View key={song.id} className="flex flex-row items-center justify-between">
-                    <TouchableOpacity onPress={() => goToSong(song.id)}>
-                      <Text className="text-xl">
-                        {i + 1}: {song.title}
-                      </Text>
-                    </TouchableOpacity>
-
-                    <View className="flex flex-row items-center gap-3">
-                      <Text>{formatDuration(song.duration)}</Text>
-                      <TouchableOpacity>
-                        <Ionicons name="play-circle" size={24} />
-                      </TouchableOpacity>
-                      <TouchableOpacity>
-                        <AddToQueue size={24} />
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                  <SongRow key={song.id} song={song} album={album} trackNumber={i + 1} />
                 ))}
             </View>
           </View>
