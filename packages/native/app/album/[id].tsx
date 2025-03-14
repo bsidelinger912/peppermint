@@ -60,26 +60,43 @@ export default function AlbumScreen() {
     });
   }
 
+  const releaseDate = album?.release_date ? new Date(album.release_date).getFullYear() : "";
+  const totalDuration =
+    album?.song_to_album && album.song_to_album.length > 0
+      ? album.song_to_album.reduce((acc, { song }) => acc + (song.duration || 0), 0)
+      : 0;
+
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <ScrollView>
         <Hero image={album?.image || ""}>
-          <View className="absolute bottom-0 left-2 flex gap-3">
-            <Text className="text-4xl font-semibold text-white">{album?.name}</Text>
-            <View>
-              {album &&
-                album.artist_to_album.map(({ artist }) => (
-                  <TouchableOpacity key={artist.id} onPress={() => goToArtist(artist.id)}>
-                    <Text className="text-white">{artist.name}</Text>
-                  </TouchableOpacity>
-                ))}
+          {album && (
+            <View className="absolute bottom-0 left-2 flex gap-3">
+              <Text className="text-4xl font-semibold text-white">{album?.name}</Text>
+              <View className="flex flex-col gap-1">
+                <View className="flex flex-row">
+                  {album &&
+                    album.artist_to_album.map(({ artist }) => (
+                      <TouchableOpacity key={artist.id} onPress={() => goToArtist(artist.id)}>
+                        <Text className="text-lg font-semibold text-white">{artist.name}</Text>
+                      </TouchableOpacity>
+                    ))}
+                </View>
+                <View className="flex flex-row items-center gap-2">
+                  <Text className="text-white">{releaseDate}</Text>
+                  <Text className="text-white">•</Text>
+                  <Text className="text-white">
+                    {album?.song_to_album.length} songs, {formatDuration(totalDuration, "long")}
+                  </Text>
+                </View>
+              </View>
             </View>
-          </View>
+          )}
         </Hero>
 
         {album ? (
-          <View className="p-4 flex flex-col gap-6" style={{ paddingBottom: bottom }}>
+          <View className="flex flex-col gap-6 p-4" style={{ paddingBottom: bottom }}>
             <View className="flex flex-row items-center justify-between">
               <View className="flex flex-row items-center gap-3">
                 <Ionicons name="play-circle-outline" size={48} />
@@ -97,7 +114,7 @@ export default function AlbumScreen() {
               </View>
             )}
 
-            <View className="border border-slate-600 w-full" />
+            <View className="w-full border border-slate-600" />
 
             <View className="flex flex-col gap-3">
               <Text className="text-2xl font-semibold">Songs</Text>
@@ -106,7 +123,7 @@ export default function AlbumScreen() {
             <View className="gap-4">
               {sortedSongs &&
                 sortedSongs.map((song, i) => (
-                  <View key={song.id} className="flex flex-row justify-between items-center">
+                  <View key={song.id} className="flex flex-row items-center justify-between">
                     <TouchableOpacity onPress={() => goToSong(song.id)}>
                       <Text className="text-xl">
                         {i + 1}: {song.title}

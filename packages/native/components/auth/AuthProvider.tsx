@@ -48,7 +48,10 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === "TOKEN_REFRESHED") {
         if (session) {
-          storeSession(session);
+          storeSession({
+            access_token: session.access_token,
+            refresh_token: session.refresh_token,
+          });
         }
       } else if (event === "SIGNED_OUT") {
         setUser(undefined);

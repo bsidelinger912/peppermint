@@ -1,18 +1,20 @@
-{
-  "album": {
-    "created_at": "2025-03-08T07:28:42.105934+00:00",
-    "description": null,
+[
+  {
+    "album": {
+      "created_at": "2025-03-08T07:28:42.105934+00:00",
+      "description": "Cherry street is my first full length solo album. It's the culmination of 10 years of writing and refining this collection of songs and 6 months of arranging, recording and mixing. Every song has a personal story behind it, from my friend Phil's song \"Dirt\" which was written for me to sing after he found out I couldn't whistle, to my song \"She goes\" which is a vision of three periods in the future of my first daughter's life which I wrote when she was 1 year old. I'm so happy to be able to share this collection of material and to have had the honor of arranging and recording it with the insanely talented Michael Thomas Connolly, thanks for listening!",
+      "id": 1,
+      "image": "https://d1kc7ecm3gue3s.cloudfront.net/cherry_street_images/cherry_street_cover_500.png",
+      "name": "Cherry Street",
+      "release_date": "2024-11-22",
+      "updated_at": "2025-03-08T07:28:42.105934"
+    },
+    "album_id": 1,
+    "contract_address": "0xc5fc2f0bcf9fb2dcfd4e31e31833466221e65ec5",
+    "created_at": "2025-03-08T08:04:11.757033+00:00",
     "id": 1,
-    "image": "https://d1kc7ecm3gue3s.cloudfront.net/cherry_street_images/cherry_street_cover_500.png",
-    "name": "Cherry Street",
-    "release_date": "2024-11-22",
-    "updated_at": "2025-03-08T07:28:42.105934"
-  },
-  "album_id": 1,
-  "contract_address": "0xc5fc2f0bcf9fb2dcfd4e31e31833466221e65ec5",
-  "created_at": "2025-03-08T08:04:11.757033+00:00",
-  "id": 1,
-  "token_id": 5,
-  "updated_at": "2025-03-08T08:04:11.757033",
-  "user_id": "c04564f8-1d47-4ffc-bea7-6e1c54a66e83"
-}
+    "token_id": 5,
+    "updated_at": "2025-03-08T08:04:11.757033",
+    "user_id": "c04564f8-1d47-4ffc-bea7-6e1c54a66e83"
+  }
+]
