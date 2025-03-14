@@ -12,6 +12,7 @@ import ScreenLoader from "~/components/ScreenLoader";
 import Hero from "~/components/layout/Hero";
 import AddToQueue from "~/components/svg/AddToQueue";
 import { formatDuration } from "~/utils/formatting";
+import { AlbumDownloadButton } from "~/components/AlbumDownloadButton";
 
 type QueryResult = Album & {
   song_to_album: {
@@ -103,9 +104,10 @@ export default function AlbumScreen() {
                 <AddToQueue size={28} />
               </View>
 
-              <View>
-                <Ionicons name="download-outline" size={28} />
-              </View>
+              <AlbumDownloadButton
+                album={album}
+                songs={album.song_to_album.map(({ song }) => song)}
+              />
             </View>
             {album.description && (
               <View className="flex flex-col gap-3">
