@@ -1,70 +1,92 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import Slider from "@react-native-community/slider";
+
 import { usePlayer } from "./PlayerContext";
 import { formatDuration } from "~/utils/formatting";
 
 export function Player() {
-  const { currentSong, isPlaying, duration, position, playPause, nextTrack, previousTrack } =
-    usePlayer();
+  const {
+    queue,
+    currentIndex,
+    currentSong,
+    isPlaying,
+    duration,
+    position,
+    playPause,
+    nextTrack,
+    previousTrack,
+    setPosition,
+  } = usePlayer();
+
+  function goToArtist(artistId: number) {
+    router.push({
+      pathname: "/artist/[id]",
+      params: { id: artistId },
+    });
+  }
+
+  function goToSong(songId: number) {
+    router.push({
+      pathname: "/song/[id]",
+      params: { id: songId },
+    });
+  }
 
   if (!currentSong) return null;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title} numberOfLines={1}>
-          {currentSong.title}
-        </Text>
-        <View style={styles.timeContainer}>
-          <Text style={styles.time}>{formatDuration(position)}</Text>
-          <Text style={styles.time}>{formatDuration(duration)}</Text>
+    <View className="gap-1 p-3">
+      <View className="flex flex-row items-center justify-between">
+        <TouchableOpacity onPress={() => goToSong(currentSong.id)}>
+          <Text className="text-xl font-semibold text-white" numberOfLines={1}>
+            {currentSong.title}
+          </Text>
+        </TouchableOpacity>
+
+        <View>
+          {currentSong.artists.map((artist) => (
+            <TouchableOpacity key={artist.id} onPress={() => goToArtist(artist.id)}>
+              <Text className="text-white">{artist.name}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
 
-      <View style={styles.controls}>
-        <TouchableOpacity onPress={previousTrack}>
-          <Ionicons name="play-skip-back" size={24} color="black" />
+      <View className="flex flex-row items-center justify-between">
+        <Text className="text-sm text-white">{formatDuration(position)}</Text>
+        <Slider
+          style={{ width: "70%" }}
+          minimumValue={0}
+          maximumValue={duration}
+          value={position}
+          onSlidingComplete={setPosition}
+          minimumTrackTintColor="#fff"
+          maximumTrackTintColor="#888"
+          thumbTintColor="#fff"
+          tapToSeek={true}
+        />
+        <Text className="text-sm text-white">{formatDuration(duration)}</Text>
+      </View>
+
+      <View className="flex flex-row items-center justify-center gap-4">
+        <TouchableOpacity disabled={currentIndex === 0} onPress={previousTrack}>
+          <Ionicons name="play-skip-back" size={24} color={currentIndex === 0 ? "grey" : "white"} />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={playPause}>
-          <Ionicons name={isPlaying ? "pause" : "play"} size={32} color="black" />
+          <Ionicons name={isPlaying ? "pause" : "play-circle"} size={38} color="white" />
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={nextTrack}>
-          <Ionicons name="play-skip-forward" size={24} color="black" />
+        <TouchableOpacity disabled={currentIndex + 1 >= queue.length} onPress={nextTrack}>
+          <Ionicons
+            name="play-skip-forward"
+            size={24}
+            color={currentIndex + 1 >= queue.length ? "grey" : "white"}
+          />
         </TouchableOpacity>
       </View>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: "white",
-    borderTopWidth: 1,
-    borderTopColor: "#eee",
-  },
-  content: {
-    marginBottom: 8,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  timeContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  time: {
-    fontSize: 12,
-    color: "#666",
-  },
-  controls: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 24,
-  },
-});

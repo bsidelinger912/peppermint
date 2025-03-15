@@ -1,43 +1,81 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useAudioPlayer, useAudioPlayerStatus } from "expo-audio";
-import { Song } from "@peppermint/shared";
+import { Album, Artist, Song } from "@peppermint/shared";
+import { getBestPlayableFile } from "./util";
 
 interface PlayerContextType {
-  playNow: (songs: Song[]) => void;
-  addToQueue: (songs: Song[]) => void;
-  currentSong: Song | null;
+  playNow: (songs: SongAlbumAndArtists[]) => void;
+  addToQueue: (songs: SongAlbumAndArtists[]) => void;
+  queue: SongAlbumAndArtists[];
+  currentIndex: number;
+  currentSong: SongAlbumAndArtists | null;
   isPlaying: boolean;
   duration: number;
   position: number;
   playPause: () => void;
   nextTrack: () => void;
   previousTrack: () => void;
+  setPosition: (position: number) => Promise<void>;
 }
+
+type SongAlbumAndArtists = Song & {
+  artists: Artist[];
+  album: Album;
+};
+
+type ResolvedSongAlbumAndArtist = SongAlbumAndArtists & {
+  fileUrl: string;
+};
 
 const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
-  const [queue, setQueue] = useState<Song[]>([]);
+  const [queue, setQueue] = useState<ResolvedSongAlbumAndArtist[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
-  const player = useAudioPlayer(queue[currentIndex]?.mp3);
-  const { playing, currentTime, duration } = useAudioPlayerStatus(player);
+  const player = useAudioPlayer(queue[currentIndex]?.fileUrl);
+  const { playing, currentTime, duration, isLoaded } = useAudioPlayerStatus(player);
 
-  const playNow = (songs: Song[]) => {
-    setQueue(songs);
+  useEffect(() => {
+    if (isLoaded && queue[currentIndex]) {
+      player.play();
+    }
+  }, [isLoaded, queue[currentIndex]]);
+
+  useEffect(() => {
+    if (duration === currentTime && currentIndex + 1 < queue.length) {
+      nextTrack();
+    }
+  }, [duration, currentTime, queue, currentIndex]);
+
+  const playNow = async (songs: SongAlbumAndArtists[]) => {
+    const resolvedSongs = await Promise.all(
+      songs.map(async (song) => ({
+        ...song,
+        fileUrl: await getBestPlayableFile(song.album, song),
+      }))
+    );
+
+    setQueue(resolvedSongs);
     setCurrentIndex(0);
-    // The player will automatically load and play the new source
   };
 
-  const addToQueue = (songs: Song[]) => {
-    setQueue((prev) => [...prev, ...songs]);
+  const addToQueue = async (songs: SongAlbumAndArtists[]) => {
+    const resolvedSongs = await Promise.all(
+      songs.map(async (song) => ({
+        ...song,
+        fileUrl: await getBestPlayableFile(song.album, song),
+      }))
+    );
+
+    setQueue((prev) => [...prev, ...resolvedSongs]);
   };
 
-  const playPause = async () => {
+  const playPause = () => {
     if (player.playing) {
-      await player.pause();
+      player.pause();
     } else {
-      await player.play();
+      player.play();
     }
   };
 
@@ -55,9 +93,15 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const setPosition = async (position: number) => {
+    await player.seekTo(position);
+  };
+
   return (
     <PlayerContext.Provider
       value={{
+        queue,
+        currentIndex,
         playNow,
         addToQueue,
         currentSong: queue[currentIndex] || null,
@@ -67,6 +111,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         playPause,
         nextTrack,
         previousTrack,
+        setPosition,
       }}>
       {children}
     </PlayerContext.Provider>

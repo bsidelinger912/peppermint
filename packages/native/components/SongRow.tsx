@@ -1,4 +1,4 @@
-import { Album, Song } from "@peppermint/shared";
+import { Album, Artist, Song } from "@peppermint/shared";
 import { TouchableOpacity, Text, View } from "react-native";
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
@@ -13,12 +13,13 @@ import { usePlayer } from "./player/PlayerContext";
 type Props = {
   song: Song;
   album: Album;
+  artists: Artist[];
   trackNumber: number;
 };
 
-export default function SongRow({ song, trackNumber, album }: Props) {
+export default function SongRow({ song, trackNumber, album, artists }: Props) {
   const [isDownloaded, setIsDownloaded] = useState<boolean | undefined>();
-  const { playNow } = usePlayer();
+  const { playNow, addToQueue } = usePlayer();
 
   function goToSong(songId: number) {
     router.push({
@@ -36,6 +37,26 @@ export default function SongRow({ song, trackNumber, album }: Props) {
     checkIfDownloaded();
   }, []);
 
+  function playSong() {
+    playNow([
+      {
+        ...song,
+        artists,
+        album,
+      },
+    ]);
+  }
+
+  function addSongToQueue() {
+    addToQueue([
+      {
+        ...song,
+        artists,
+        album,
+      },
+    ]);
+  }
+
   return (
     <View key={song.id} className="flex flex-row items-center justify-between">
       <View className="flex flex-row items-center gap-2">
@@ -50,10 +71,10 @@ export default function SongRow({ song, trackNumber, album }: Props) {
 
       <View className="flex flex-row items-center gap-3">
         <Text>{formatDuration(song.duration)}</Text>
-        <TouchableOpacity onPress={() => playNow([song])}>
+        <TouchableOpacity onPress={playSong}>
           <Ionicons name="play-circle" size={24} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={addSongToQueue}>
           <AddToQueue size={24} />
         </TouchableOpacity>
       </View>

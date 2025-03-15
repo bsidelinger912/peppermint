@@ -1,6 +1,6 @@
 import React from "react";
 import { router, Stack, useLocalSearchParams } from "expo-router";
-import { View, Text, ScrollView, TouchableOpacity, ImageBackground } from "react-native";
+import { View, Text, TouchableOpacity, ImageBackground } from "react-native";
 // import { useSafeAreaInsets } from "react-native-safe-area-context";
 // import { Ionicons } from "@expo/vector-icons";
 import { Artist, Album } from "@peppermint/shared";
@@ -10,6 +10,7 @@ import { queryOne } from "~/utils/supabaseQuery";
 // import ScreenLoader from "~/components/ScreenLoader";
 import Hero from "~/components/layout/hero/Hero";
 import { LinearGradient } from "expo-linear-gradient";
+import PlayerScreen from "~/components/layout/PlayerScreen";
 // import { formatDuration } from "~/utils/formatting";
 // import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -43,7 +44,7 @@ export default function AlbumScreen() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <ScrollView>
+      <PlayerScreen>
         <Hero image={artist ? artist.hero_image : ""}>
           <View className="absolute bottom-0 left-2">
             <Text className="text-4xl font-semibold text-white">{artist?.name}</Text>
@@ -87,7 +88,7 @@ export default function AlbumScreen() {
             </View>
           </View>
         )}
-      </ScrollView>
+      </PlayerScreen>
     </>
   );
 }

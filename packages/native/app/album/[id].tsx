@@ -120,7 +120,13 @@ export default function AlbumScreen() {
             <View className="gap-4">
               {sortedSongs &&
                 sortedSongs.map((song, i) => (
-                  <SongRow key={song.id} song={song} album={album} trackNumber={i + 1} />
+                  <SongRow
+                    key={song.id}
+                    song={song}
+                    album={album}
+                    artists={album.artist_to_album.map(({ artist }) => artist)}
+                    trackNumber={i + 1}
+                  />
                 ))}
             </View>
           </View>

@@ -1,17 +1,15 @@
 import React from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Song } from "@peppermint/shared";
 
 import { supabase } from "~/utils/supabase";
 import { queryOne } from "~/utils/supabaseQuery";
-// import ScreenLoader from "~/components/ScreenLoader";
 import Hero from "~/components/layout/hero/Hero";
 import AddToQueue from "~/components/svg/AddToQueue";
-// import { formatDuration } from "~/utils/formatting";
-// import { useSafeAreaInsets } from "react-native-safe-area-context";
+import PlayerScreen from "~/components/layout/PlayerScreen";
 
 export default function AlbumScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -25,7 +23,7 @@ export default function AlbumScreen() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <ScrollView>
+      <PlayerScreen>
         <Hero>
           <View className="absolute bottom-0 left-2">
             <Text className="text-4xl font-semibold text-white">{song?.title}</Text>
@@ -56,7 +54,7 @@ export default function AlbumScreen() {
             )}
           </View>
         )}
-      </ScrollView>
+      </PlayerScreen>
     </>
   );
 }
