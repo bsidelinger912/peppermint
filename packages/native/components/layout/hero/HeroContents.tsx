@@ -4,10 +4,10 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-import Title from "../svg/title";
-import Headphones from "../svg/headphones";
+import Title from "../../svg/title";
+import Headphones from "../../svg/headphones";
 import UserMenu from "./UserMenu";
-import { useAuthContext } from "../auth/context";
+import { useAuthContext } from "../../auth/context";
 
 export type Props = {
   children?: ViewProps["children"];
@@ -30,16 +30,15 @@ export default function HeroContents({ children, hasImage }: Props) {
                 router.back();
               }}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              className="rounded-full relative"
-            >
-              {hasImage && <View className="rounded-full w-7 h-7 bg-black absolute top-1 left-1" />}
+              className="relative rounded-full">
+              {hasImage && <View className="absolute left-1 top-1 h-7 w-7 rounded-full bg-black" />}
               <Ionicons name="chevron-back-circle" size={32} color="white" />
             </TouchableOpacity>
           </View>
         )}
 
         {children ? (
-          <View style={{ height: 250 - top }} className="relative w-full z-10">
+          <View style={{ height: 250 - top }} className="relative z-10 w-full">
             {children}
           </View>
         ) : (

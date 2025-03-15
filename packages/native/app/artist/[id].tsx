@@ -8,7 +8,7 @@ import { Artist, Album } from "@peppermint/shared";
 import { supabase } from "~/utils/supabase";
 import { queryOne } from "~/utils/supabaseQuery";
 // import ScreenLoader from "~/components/ScreenLoader";
-import Hero from "~/components/layout/Hero";
+import Hero from "~/components/layout/hero/Hero";
 import { LinearGradient } from "expo-linear-gradient";
 // import { formatDuration } from "~/utils/formatting";
 // import { useSafeAreaInsets } from "react-native-safe-area-context";

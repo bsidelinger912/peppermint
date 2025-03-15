@@ -1,6 +1,6 @@
 import React from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -9,11 +9,12 @@ import { Album, Song, Artist } from "@peppermint/shared";
 import { supabase } from "~/utils/supabase";
 import { queryOne } from "~/utils/supabaseQuery";
 import ScreenLoader from "~/components/ScreenLoader";
-import Hero from "~/components/layout/Hero";
+import Hero from "~/components/layout/hero/Hero";
 import AddToQueue from "~/components/svg/AddToQueue";
 import { formatDuration } from "~/utils/formatting";
 import { AlbumDownloadButton } from "~/components/AlbumDownloadButton";
 import SongRow from "~/components/SongRow";
+import PlayerScreen from "~/components/layout/PlayerScreen";
 
 type QueryResult = Album & {
   song_to_album: {
@@ -64,7 +65,7 @@ export default function AlbumScreen() {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <ScrollView>
+      <PlayerScreen>
         <Hero image={album?.image || ""}>
           {album && (
             <View className="absolute bottom-0 left-2 flex gap-3">
@@ -126,7 +127,7 @@ export default function AlbumScreen() {
         ) : (
           <ScreenLoader />
         )}
-      </ScrollView>
+      </PlayerScreen>
     </>
   );
 }

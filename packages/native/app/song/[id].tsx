@@ -8,7 +8,7 @@ import { Song } from "@peppermint/shared";
 import { supabase } from "~/utils/supabase";
 import { queryOne } from "~/utils/supabaseQuery";
 // import ScreenLoader from "~/components/ScreenLoader";
-import Hero from "~/components/layout/Hero";
+import Hero from "~/components/layout/hero/Hero";
 import AddToQueue from "~/components/svg/AddToQueue";
 // import { formatDuration } from "~/utils/formatting";
 // import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -33,7 +33,7 @@ export default function AlbumScreen() {
         </Hero>
 
         {song && (
-          <View className="p-4 flex flex-col gap-6" style={{ paddingBottom: bottom }}>
+          <View className="flex flex-col gap-6 p-4" style={{ paddingBottom: bottom }}>
             <View className="flex flex-row items-center justify-between">
               <View className="flex flex-row items-center gap-3">
                 <Ionicons name="play-circle-outline" size={48} />

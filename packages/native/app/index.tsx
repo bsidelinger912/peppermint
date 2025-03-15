@@ -1,7 +1,7 @@
 import { Stack } from "expo-router";
 import { View, Button, Linking } from "react-native";
 
-import Hero from "~/components/layout/Hero";
+import Hero from "~/components/layout/hero/Hero";
 import { useAuthContext } from "~/components/auth/context";
 import Dashboard from "~/components/dashboard";
 

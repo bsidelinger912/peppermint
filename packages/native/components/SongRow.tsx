@@ -8,6 +8,7 @@ import AddToQueue from "~/components/svg/AddToQueue";
 import { formatDuration } from "~/utils/formatting";
 import { getInfoAsync } from "expo-file-system";
 import { getFilePath } from "~/utils/files";
+import { usePlayer } from "./player/PlayerContext";
 
 type Props = {
   song: Song;
@@ -17,6 +18,7 @@ type Props = {
 
 export default function SongRow({ song, trackNumber, album }: Props) {
   const [isDownloaded, setIsDownloaded] = useState<boolean | undefined>();
+  const { playNow } = usePlayer();
 
   function goToSong(songId: number) {
     router.push({
@@ -48,7 +50,7 @@ export default function SongRow({ song, trackNumber, album }: Props) {
 
       <View className="flex flex-row items-center gap-3">
         <Text>{formatDuration(song.duration)}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => playNow([song])}>
           <Ionicons name="play-circle" size={24} />
         </TouchableOpacity>
         <TouchableOpacity>
