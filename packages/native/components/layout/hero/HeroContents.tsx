@@ -23,8 +23,8 @@ export default function HeroContents({ children, hasImage }: Props) {
   return (
     <SafeAreaView>
       <View className="relative flex flex-col items-center justify-center">
-        {router.canGoBack() && (
-          <View className="absolute left-2 top-0 z-20">
+        {/* {router.canGoBack() && (
+          <View className="absolute left-2 top-2 z-20">
             <TouchableOpacity
               onPress={() => {
                 router.back();
@@ -35,7 +35,7 @@ export default function HeroContents({ children, hasImage }: Props) {
               <Ionicons name="chevron-back-circle" size={32} color="white" />
             </TouchableOpacity>
           </View>
-        )}
+        )} */}
 
         {children ? (
           <View style={{ height: 250 - top }} className="relative z-10 w-full">
@@ -52,11 +52,11 @@ export default function HeroContents({ children, hasImage }: Props) {
           </>
         )}
 
-        {user && (
-          <View className="absolute right-2 top-0 z-20">
+        {/* {user && (
+          <View className="absolute right-2 top-2 z-20">
             <UserMenu image={hasImage} />
           </View>
-        )}
+        )} */}
       </View>
     </SafeAreaView>
   );

@@ -48,6 +48,18 @@ module.exports = [
       ...react.configs.flat.recommended.rules,
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        {
+          // "args": "all",
+          "argsIgnorePattern": "^_"
+          // "caughtErrors": "all",
+          // "caughtErrorsIgnorePattern": "^_",
+          // "destructuredArrayIgnorePattern": "^_",
+          // "varsIgnorePattern": "^_",
+          // "ignoreRestSiblings": true
+        }
+      ]
     },
   },
   {

@@ -45,7 +45,7 @@ export default function AlbumScreen() {
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <PlayerScreen>
-        <Hero image={artist ? artist.hero_image : ""}>
+        <Hero image={artist ? artist.hero_image : ""} title={artist?.name}>
           <View className="absolute bottom-0 left-2">
             <Text className="text-4xl font-semibold text-white">{artist?.name}</Text>
           </View>

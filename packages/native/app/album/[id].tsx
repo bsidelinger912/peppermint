@@ -66,10 +66,10 @@ export default function AlbumScreen() {
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <PlayerScreen>
-        <Hero image={album?.image || ""}>
+        <Hero image={album?.image || ""} title={album?.name}>
           {album && (
             <View className="absolute bottom-0 left-2 flex gap-3">
-              <Text className="text-4xl font-semibold text-white">{album?.name}</Text>
+              <Text className="text-4xl font-semibold text-white">{album.name}</Text>
               <View className="flex flex-col gap-1">
                 <View className="flex flex-row">
                   {album &&

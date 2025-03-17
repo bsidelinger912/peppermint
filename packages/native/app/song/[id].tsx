@@ -24,7 +24,7 @@ export default function AlbumScreen() {
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <PlayerScreen>
-        <Hero>
+        <Hero title={song?.title}>
           <View className="absolute bottom-0 left-2">
             <Text className="text-4xl font-semibold text-white">{song?.title}</Text>
           </View>
