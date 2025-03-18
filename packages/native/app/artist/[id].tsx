@@ -11,6 +11,7 @@ import { queryOne } from "~/utils/supabaseQuery";
 import Hero from "~/components/layout/hero/Hero";
 import { LinearGradient } from "expo-linear-gradient";
 import PlayerScreen from "~/components/layout/PlayerScreen";
+import Typography from "~/components/ds/Typography";
 // import { formatDuration } from "~/utils/formatting";
 // import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -53,7 +54,7 @@ export default function AlbumScreen() {
 
         {artist && (
           <View className="flex flex-col gap-4 p-4">
-            <Text className="text-2xl font-semibold">Albums</Text>
+            <Typography variant="h3">Albums</Typography>
 
             <View className="grid grid-cols-2 gap-4">
               {artist.artist_to_album.map(({ album }) => (

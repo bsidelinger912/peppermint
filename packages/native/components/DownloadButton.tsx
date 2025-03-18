@@ -1,18 +1,19 @@
 import { View, TouchableOpacity, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Album, Song } from "@peppermint/shared";
+import { Album, Song, Artist } from "@peppermint/shared";
 
 import { useDownloadSongs } from "~/hooks/download";
+import Icon from "~/components/ds/Icon";
 
 type Props = {
   album: Album;
   songs: Song[];
+  artists: Artist[];
 };
 
-export function AlbumDownloadButton(props: Props) {
+export default function DownloadButton(props: Props) {
   const { loading, download, progress } = useDownloadSongs(props.album, props.songs, {
     onSuccess: () => {
-      console.log("success downloading");
+      // console.log("success downloading");
     },
   });
 
@@ -27,7 +28,7 @@ export function AlbumDownloadButton(props: Props) {
   return (
     <TouchableOpacity onPress={download}>
       <View>
-        <Ionicons name="download-outline" size={28} />
+        <Icon name="download-outline" size={28} />
       </View>
     </TouchableOpacity>
   );

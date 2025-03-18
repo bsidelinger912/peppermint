@@ -1,32 +1,62 @@
 import React from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
-import { Song } from "@peppermint/shared";
+import { Album, Artist, Song } from "@peppermint/shared";
+import { router } from "expo-router";
 
 import { supabase } from "~/utils/supabase";
 import { queryOne } from "~/utils/supabaseQuery";
 import Hero from "~/components/layout/hero/Hero";
-import AddToQueue from "~/components/svg/AddToQueue";
 import PlayerScreen from "~/components/layout/PlayerScreen";
+import PlayButton from "~/components/PlayButton";
+import AddToQueueButton from "~/components/AddToQueueButton";
+import DownloadButton from "~/components/DownloadButton";
+import Typography from "~/components/ds/Typography";
+
+type SongWithAlbumsAndArtist = Song & {
+  song_to_album: { album: Album }[];
+  artist_to_song: { artist: Artist }[];
+};
 
 export default function AlbumScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { bottom } = useSafeAreaInsets();
 
-  const { data: song } = queryOne<Song>(
-    async () => await supabase.from("song").select("*").eq("id", id).single(),
+  const { data: song } = queryOne<SongWithAlbumsAndArtist>(
+    async () =>
+      await supabase
+        .from("song")
+        .select(
+          "*, song_to_album(album_id, album(*), track_number), artist_to_song(artist_id, artist(*))"
+        )
+        .eq("id", id)
+        .single(),
     [{ table: "song", filter: `id=eq.${id}` }]
   );
+
+  function goToArtist(artistId: number) {
+    router.push({
+      pathname: "/artist/[id]",
+      params: { id: artistId },
+    });
+  }
 
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <PlayerScreen>
-        <Hero title={song?.title}>
-          <View className="absolute bottom-0 left-2">
+        <Hero title={song?.title} image={song ? song.song_to_album[0].album.image : ""}>
+          <View className="absolute bottom-0 left-2 gap-1">
             <Text className="text-4xl font-semibold text-white">{song?.title}</Text>
+            <View>
+              {song &&
+                song?.artist_to_song.map(({ artist }) => (
+                  <TouchableOpacity key={artist.id} onPress={() => goToArtist(artist.id)}>
+                    <Text className="text-lg font-semibold text-white">{artist.name}</Text>
+                  </TouchableOpacity>
+                ))}
+            </View>
           </View>
         </Hero>
 
@@ -34,22 +64,32 @@ export default function AlbumScreen() {
           <View className="flex flex-col gap-6 p-4" style={{ paddingBottom: bottom }}>
             <View className="flex flex-row items-center justify-between">
               <View className="flex flex-row items-center gap-3">
-                <Ionicons name="play-circle-outline" size={48} />
-                <AddToQueue size={28} />
+                <PlayButton
+                  variant="large"
+                  songs={[song]}
+                  album={song.song_to_album[0].album}
+                  artists={song.artist_to_song.map(({ artist }) => artist)}
+                />
+                <AddToQueueButton
+                  songs={[song]}
+                  album={song.song_to_album[0].album}
+                  artists={song.artist_to_song.map(({ artist }) => artist)}
+                />
               </View>
 
-              <View>
-                <Ionicons name="download-outline" size={28} />
-              </View>
+              <DownloadButton
+                songs={[song]}
+                album={song.song_to_album[0].album}
+                artists={song.artist_to_song.map(({ artist }) => artist)}
+              />
             </View>
 
-            {song.description && <Text>{song.description}</Text>}
+            {song.description && <Typography>{song.description}</Typography>}
 
             {song.lyrics && (
               <View className="flex gap-3">
-                <Text className="text-xl font-semibold">Lyrics</Text>
-
-                <Text>{song.lyrics}</Text>
+                <Typography variant="h4">Lyrics</Typography>
+                <Typography>{song.lyrics}</Typography>
               </View>
             )}
           </View>

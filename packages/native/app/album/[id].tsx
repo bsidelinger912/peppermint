@@ -1,7 +1,6 @@
 import React from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { View, Text, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Album, Song, Artist } from "@peppermint/shared";
@@ -10,11 +9,13 @@ import { supabase } from "~/utils/supabase";
 import { queryOne } from "~/utils/supabaseQuery";
 import ScreenLoader from "~/components/ScreenLoader";
 import Hero from "~/components/layout/hero/Hero";
-import AddToQueue from "~/components/svg/AddToQueue";
 import { formatDuration } from "~/utils/formatting";
-import { AlbumDownloadButton } from "~/components/AlbumDownloadButton";
+import DownloadButton from "~/components/DownloadButton";
 import SongRow from "~/components/SongRow";
 import PlayerScreen from "~/components/layout/PlayerScreen";
+import PlayButton from "~/components/PlayButton";
+import Typography from "~/components/ds/Typography";
+import AddToQueueButton from "~/components/AddToQueueButton";
 
 type QueryResult = Album & {
   song_to_album: {
@@ -95,26 +96,36 @@ export default function AlbumScreen() {
           <View className="flex flex-col gap-6 p-4" style={{ paddingBottom: bottom }}>
             <View className="flex flex-row items-center justify-between">
               <View className="flex flex-row items-center gap-3">
-                <Ionicons name="play-circle-outline" size={48} />
-                <AddToQueue size={28} />
+                <PlayButton
+                  variant="large"
+                  album={album}
+                  artists={album.artist_to_album.map(({ artist }) => artist)}
+                  songs={album.song_to_album.map(({ song }) => song)}
+                />
+                <AddToQueueButton
+                  album={album}
+                  artists={album.artist_to_album.map(({ artist }) => artist)}
+                  songs={album.song_to_album.map(({ song }) => song)}
+                />
               </View>
 
-              <AlbumDownloadButton
+              <DownloadButton
                 album={album}
+                artists={album.artist_to_album.map(({ artist }) => artist)}
                 songs={album.song_to_album.map(({ song }) => song)}
               />
             </View>
             {album.description && (
               <View className="flex flex-col gap-3">
-                <Text className="text-xl font-semibold">From the artist:</Text>
-                <Text>{album.description}</Text>
+                <Typography variant="h3">From the artist:</Typography>
+                <Typography>{album.description}</Typography>
               </View>
             )}
 
-            <View className="w-full border border-slate-600" />
+            <View className="w-full border border-slate-400" />
 
             <View className="flex flex-col gap-3">
-              <Text className="text-2xl font-semibold">Songs</Text>
+              <Typography variant="h3">Songs</Typography>
             </View>
 
             <View className="gap-4">

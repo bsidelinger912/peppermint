@@ -7,6 +7,7 @@ import { useAuthContext } from "../auth/context";
 import { queryMany } from "~/utils/supabaseQuery";
 import { supabase } from "~/utils/supabase";
 import ScreenLoader from "../ScreenLoader";
+import Typography from "~/components/ds/Typography";
 
 type QueryResult = Token & {
   album: Album & {
@@ -53,7 +54,7 @@ export default function Dashboard() {
 
   return (
     <View className="flex flex-col gap-4 p-4">
-      <Text className="text-2xl font-semibold">Your Music</Text>
+      <Typography variant="h3">Your Music</Typography>
       <View className="grid grid-cols-2 gap-4">
         {data.map((token) => (
           <TouchableOpacity
