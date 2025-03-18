@@ -1,8 +1,11 @@
 import { View, TouchableOpacity, Text } from "react-native";
 import { useState } from "react";
+import { router } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
+
 import OutsidePressHandler from "react-native-outside-press";
 import { useAuthContext } from "../../auth/context";
+import Typography from "~/components/ds/Typography";
 
 export type Props = {
   image?: boolean;
@@ -10,7 +13,7 @@ export type Props = {
 
 export default function UserMenu({ image }: Props) {
   const [open, setOpen] = useState(false);
-  const { logout } = useAuthContext();
+  const { logout, user } = useAuthContext<true>();
 
   return (
     <OutsidePressHandler onOutsidePress={() => setOpen(false)}>
@@ -20,7 +23,18 @@ export default function UserMenu({ image }: Props) {
           <Ionicons name="person-circle-outline" size={32} color="white" />
         </TouchableOpacity>
         {open && (
-          <View className="absolute right-0 top-[30px] flex w-[200px] flex-col gap-3 rounded-md border border-green-600 bg-white p-3">
+          <View className="absolute right-0 top-[30px] flex w-[250px] flex-col gap-3 rounded-md border border-green-600 bg-white p-3">
+            <View className="truncate border-b pb-2">
+              <Typography numberOfLines={1}>{user.email}</Typography>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => {
+                router.push("/queue");
+                setOpen(false);
+              }}>
+              <Text>Queue</Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={logout}>
               <Text>Logout</Text>
             </TouchableOpacity>
