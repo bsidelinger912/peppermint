@@ -5,11 +5,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuthContext } from "../../auth/context";
 import UserMenu from "../hero/UserMenu";
 import { useHeaderContext } from "./HeaderContext";
+import { useEffect } from "react";
+
+const scrollY = new Animated.Value(0);
 
 export default function Header() {
   const { user } = useAuthContext();
   const {
-    headerState: { backNavigation, hasImage, title, scrollY = new Animated.Value(0) },
+    headerState: { backNavigation, hasImage, title, scrollPosition },
   } = useHeaderContext();
   const { top } = useSafeAreaInsets();
 
@@ -24,6 +27,10 @@ export default function Header() {
     outputRange: ["rgba(255,255,255,0)", "rgba(255,255,255,1)"],
     extrapolate: "clamp",
   });
+
+  useEffect(() => {
+    scrollY.setValue(scrollPosition);
+  }, [scrollPosition]);
 
   return (
     <Animated.View className="absolute z-20 h-32 w-full" style={{ backgroundColor }}>
@@ -54,26 +61,6 @@ export default function Header() {
         )}
         {user && <UserMenu image={true} />}
       </View>
-
-      {/* {backNavigation && (
-        <View className="absolute left-2" style={{ top: top + 8 }}>
-          <TouchableOpacity
-            onPress={() => {
-              backNavigation();
-            }}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            className="relative rounded-full">
-            {hasImage && <View className="absolute left-1 top-1 h-7 w-7 rounded-full bg-black" />}
-            <Ionicons name="chevron-back-circle" size={32} color="white" />
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {user && (
-        <View className="absolute right-2" style={{ top: top + 8 }}>
-          <UserMenu image={true} />
-        </View>
-      )} */}
     </Animated.View>
   );
 }

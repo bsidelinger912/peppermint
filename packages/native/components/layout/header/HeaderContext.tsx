@@ -1,11 +1,10 @@
 import { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
-import { Animated } from "react-native";
 
 type HeaderState = {
   title?: string;
   backNavigation?: () => void;
   hasImage?: boolean;
-  scrollY: Animated.Value;
+  scrollPosition: number;
 };
 
 type HeaderContextType = {
@@ -16,7 +15,7 @@ type HeaderContextType = {
 const HeaderContext = createContext<HeaderContextType | undefined>(undefined);
 
 export function HeaderContextProvider({ children }: { children: React.ReactNode }) {
-  const [headerState, setHeaderState] = useState<HeaderState>({ scrollY: new Animated.Value(0) });
+  const [headerState, setHeaderState] = useState<HeaderState>({ scrollPosition: 0 });
 
   return (
     <HeaderContext.Provider value={{ headerState, setHeaderState }}>
