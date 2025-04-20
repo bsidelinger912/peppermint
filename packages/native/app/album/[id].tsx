@@ -100,7 +100,7 @@ export default function AlbumScreen() {
                   variant="large"
                   album={album}
                   artists={album.artist_to_album.map(({ artist }) => artist)}
-                  songs={album.song_to_album.map(({ song }) => song)}
+                  songs={sortedSongs as Song[]}
                 />
                 <AddToQueueButton
                   album={album}

@@ -8,6 +8,7 @@ interface PlayerContextType {
   addToQueue: (songs: SongAlbumAndArtists[]) => void;
   removeFromQueue: (index: number) => void;
   moveQueueItem: (from: number, to: number) => void;
+  setQueueIndex: (index: number) => void;
   queue: SongAlbumAndArtists[];
   currentIndex: number;
   currentSong: SongAlbumAndArtists | null;
@@ -39,7 +40,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const { playing, currentTime, duration, isLoaded } = useAudioPlayerStatus(player);
 
   useEffect(() => {
-    if (isLoaded && queue[currentIndex]) {
+    if (isLoaded && !playing && queue[currentIndex]) {
       player.play();
     }
   }, [isLoaded, queue[currentIndex]]);
@@ -58,8 +59,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       }))
     );
 
-    setQueue(resolvedSongs);
     setCurrentIndex(0);
+    setQueue(resolvedSongs);
   };
 
   const addToQueue = async (songs: SongAlbumAndArtists[]) => {
@@ -83,6 +84,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
   const nextTrack = () => {
     if (currentIndex < queue.length - 1) {
+      player.pause();
       setCurrentIndex((prev) => prev + 1);
       // The player will automatically load and play the new source
     }
@@ -90,6 +92,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
   const previousTrack = () => {
     if (currentIndex > 0) {
+      player.pause();
       setCurrentIndex((prev) => prev - 1);
       // The player will automatically load and play the new source
     }
@@ -137,6 +140,11 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const setQueueIndex = (index: number) => {
+    player.pause();
+    setCurrentIndex(index);
+  };
+
   return (
     <PlayerContext.Provider
       value={{
@@ -145,6 +153,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         playNow,
         addToQueue,
         removeFromQueue,
+        setQueueIndex,
         currentSong: queue[currentIndex] || null,
         isPlaying: playing,
         duration,

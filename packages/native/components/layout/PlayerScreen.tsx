@@ -46,7 +46,7 @@ export default function PlayerScreen({ children }: { children: React.ReactNode }
         </ScrollView>
       </View>
       {currentSong && (
-        <View className="absolute bottom-0 left-0 right-0 h-40 border-t border-t-slate-900 bg-slate-700">
+        <View className="absolute bottom-0 left-0 right-0 h-40">
           <Player />
         </View>
       )}
