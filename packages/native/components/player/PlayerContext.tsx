@@ -35,18 +35,26 @@ const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [queue, setQueue] = useState<ResolvedSongAlbumAndArtist[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [advancing, setAdvancing] = useState(false);
 
   const player = useAudioPlayer(queue[currentIndex]?.fileUrl);
   const { playing, currentTime, duration, isLoaded } = useAudioPlayerStatus(player);
 
   useEffect(() => {
-    if (isLoaded && !playing && queue[currentIndex]) {
+    if (isLoaded && queue[currentIndex]) {
+      setAdvancing(false);
       player.play();
     }
   }, [isLoaded, queue[currentIndex]]);
 
   useEffect(() => {
-    if (duration === currentTime && currentIndex + 1 < queue.length) {
+    if (
+      !advancing &&
+      currentTime !== 0 &&
+      duration === currentTime &&
+      currentIndex + 1 < queue.length
+    ) {
+      setAdvancing(true);
       nextTrack();
     }
   }, [duration, currentTime, queue, currentIndex]);

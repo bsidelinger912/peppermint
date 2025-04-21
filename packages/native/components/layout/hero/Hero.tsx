@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
-import { View, ImageBackground, type ViewProps, Animated } from "react-native";
+import React from "react";
+import { View, ImageBackground, type ViewProps } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useFocusEffect } from "@react-navigation/native";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 import HeroContents from "./HeroContents";
 import { useHeaderContext } from "../header/HeaderContext";
@@ -18,7 +19,6 @@ export type Props = {
 export default function Hero({ children, image, title }: Props) {
   const showSkeletonLoader = image === "";
   const imageToUse = image === undefined ? "https://www.peppermintmusic.xyz/aurora.png" : image;
-  const fadeAnim = React.useRef(new Animated.Value(0)).current;
 
   const router = useRouter();
   const { setHeaderState } = useHeaderContext();
@@ -43,15 +43,6 @@ export default function Hero({ children, image, title }: Props) {
     }, [title])
   );
 
-  useEffect(() => {
-    fadeAnim.setValue(0);
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start();
-  }, [imageToUse]);
-
   if (showSkeletonLoader) {
     return (
       <View className="h-[250px] w-full bg-gray-200">
@@ -73,7 +64,7 @@ export default function Hero({ children, image, title }: Props) {
           className="absolute h-full w-full"
           resizeMode="cover"
           source={{ uri: imageToUse }}
-          style={{ opacity: fadeAnim }}
+          entering={FadeIn.duration(1000)}
         />
       )}
 
