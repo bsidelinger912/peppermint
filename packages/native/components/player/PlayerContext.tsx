@@ -6,6 +6,9 @@ import { getBestPlayableFile } from "./util";
 interface PlayerContextType {
   playNow: (songs: SongAlbumAndArtists[]) => void;
   addToQueue: (songs: SongAlbumAndArtists[]) => void;
+  removeFromQueue: (index: number) => void;
+  moveQueueItem: (from: number, to: number) => void;
+  setQueueIndex: (index: number) => void;
   queue: SongAlbumAndArtists[];
   currentIndex: number;
   currentSong: SongAlbumAndArtists | null;
@@ -18,7 +21,7 @@ interface PlayerContextType {
   setPosition: (position: number) => Promise<void>;
 }
 
-type SongAlbumAndArtists = Song & {
+export type SongAlbumAndArtists = Song & {
   artists: Artist[];
   album: Album;
 };
@@ -32,18 +35,26 @@ const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 export function PlayerProvider({ children }: { children: React.ReactNode }) {
   const [queue, setQueue] = useState<ResolvedSongAlbumAndArtist[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [advancing, setAdvancing] = useState(false);
 
   const player = useAudioPlayer(queue[currentIndex]?.fileUrl);
   const { playing, currentTime, duration, isLoaded } = useAudioPlayerStatus(player);
 
   useEffect(() => {
     if (isLoaded && queue[currentIndex]) {
+      setAdvancing(false);
       player.play();
     }
   }, [isLoaded, queue[currentIndex]]);
 
   useEffect(() => {
-    if (duration === currentTime && currentIndex + 1 < queue.length) {
+    if (
+      !advancing &&
+      currentTime !== 0 &&
+      duration === currentTime &&
+      currentIndex + 1 < queue.length
+    ) {
+      setAdvancing(true);
       nextTrack();
     }
   }, [duration, currentTime, queue, currentIndex]);
@@ -56,8 +67,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       }))
     );
 
-    setQueue(resolvedSongs);
     setCurrentIndex(0);
+    setQueue(resolvedSongs);
   };
 
   const addToQueue = async (songs: SongAlbumAndArtists[]) => {
@@ -81,6 +92,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
   const nextTrack = () => {
     if (currentIndex < queue.length - 1) {
+      player.pause();
       setCurrentIndex((prev) => prev + 1);
       // The player will automatically load and play the new source
     }
@@ -88,6 +100,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
 
   const previousTrack = () => {
     if (currentIndex > 0) {
+      player.pause();
       setCurrentIndex((prev) => prev - 1);
       // The player will automatically load and play the new source
     }
@@ -97,6 +110,49 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     await player.seekTo(position);
   };
 
+  const moveQueueItem = (from: number, to: number) => {
+    setQueue((prev) => {
+      const newQueue = [...prev];
+      const [movedItem] = newQueue.splice(from, 1);
+      newQueue.splice(to, 0, movedItem);
+      return newQueue;
+    });
+
+    // Adjust currentIndex if needed
+    if (currentIndex === from) {
+      setCurrentIndex(to);
+    } else if (from < currentIndex && to >= currentIndex) {
+      setCurrentIndex((prev) => prev - 1);
+    } else if (from > currentIndex && to <= currentIndex) {
+      setCurrentIndex((prev) => prev + 1);
+    }
+  };
+
+  const removeFromQueue = (index: number) => {
+    setQueue((prev) => {
+      const newQueue = [...prev];
+      newQueue.splice(index, 1);
+      return newQueue;
+    });
+
+    // If we remove the current song, adjust currentIndex
+    if (index === currentIndex) {
+      // If there are songs after this one, keep same index to play next song
+      // Otherwise move to previous song
+      if (index >= queue.length - 1) {
+        setCurrentIndex((prev) => Math.max(0, prev - 1));
+      }
+    } else if (index < currentIndex) {
+      // If we remove a song before the current one, decrement index
+      setCurrentIndex((prev) => prev - 1);
+    }
+  };
+
+  const setQueueIndex = (index: number) => {
+    player.pause();
+    setCurrentIndex(index);
+  };
+
   return (
     <PlayerContext.Provider
       value={{
@@ -104,6 +160,8 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         currentIndex,
         playNow,
         addToQueue,
+        removeFromQueue,
+        setQueueIndex,
         currentSong: queue[currentIndex] || null,
         isPlaying: playing,
         duration,
@@ -112,6 +170,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         nextTrack,
         previousTrack,
         setPosition,
+        moveQueueItem,
       }}>
       {children}
     </PlayerContext.Provider>

@@ -37,7 +37,7 @@ export function Player() {
   if (!currentSong) return null;
 
   return (
-    <View className="gap-1 p-3">
+    <View className="gap-1 border-t border-t-slate-900 bg-slate-700 p-3">
       <View className="flex flex-row items-center justify-between">
         <TouchableOpacity onPress={() => goToSong(currentSong.id)}>
           <Text className="text-xl font-semibold text-white" numberOfLines={1}>
