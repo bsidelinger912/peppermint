@@ -51,6 +51,25 @@ export default function Hero({ children, image, title }: Props) {
     );
   }
 
+  if (image === "blank") {
+    return (
+      <View className="h-[250px] w-full bg-gray-400">
+        <LinearGradient
+          colors={["transparent", "rgba(0,0,0,0.8)"]}
+          locations={[0.5, 1]}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+          }}
+        />
+        <HeroContents hasImage={true}>{children}</HeroContents>
+      </View>
+    );
+  }
+
   return (
     <View className="h-[250px] w-full">
       {image === undefined ? (

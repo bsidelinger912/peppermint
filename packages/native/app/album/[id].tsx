@@ -63,11 +63,13 @@ export default function AlbumScreen() {
       ? album.song_to_album.reduce((acc, { song }) => acc + (song.duration || 0), 0)
       : 0;
 
+  const image = album ? album.image || "blank" : "";
+
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
       <PlayerScreen>
-        <Hero image={album?.image || ""} title={album?.name}>
+        <Hero image={image} title={album?.name}>
           {album && (
             <View className="absolute bottom-0 left-2 flex gap-3">
               <Text className="text-4xl font-semibold text-white">{album.name}</Text>
