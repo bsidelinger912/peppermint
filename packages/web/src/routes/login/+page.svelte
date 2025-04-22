@@ -21,7 +21,7 @@
       supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `http://localhost:5173?redirect=${redirectUrl}`,
+          redirectTo: `${window.location.origin}?redirect=${redirectUrl}`,
         },
       });
     } catch (e) {

@@ -72,7 +72,7 @@ module.exports = [
         extraFileExtensions: ['.svelte']
       },
       globals: {
-        window: true,
+        ...globals.browser
       },
     },
     plugins: {

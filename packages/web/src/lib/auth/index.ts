@@ -36,10 +36,11 @@ export function setAuthContext() {
       const token = params.get("access_token");
       const refreshToken = params.get("refresh_token");
       // const type = params.get("type") as EmailOtpType;
+      const searchParams = new URLSearchParams(window.location.search);
+      const redirect = searchParams.get("redirect") as string;
 
       if (token && refreshToken) {
-        console.log("have token, redirecting", token, refreshToken);
-        window.location.href = `peppermint://?token=${token}&refresh_token=${refreshToken}`;
+        window.location.href = `${decodeURIComponent(redirect)}?token=${token}&refresh_token=${refreshToken}`;
         // verifyOtp(token, type);
       }
 

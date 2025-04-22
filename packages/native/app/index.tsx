@@ -9,7 +9,7 @@ import PlayerScreen from "~/components/layout/PlayerScreen";
 
 export default function Home() {
   const login = () => {
-    Linking.openURL("http://localhost:5173/login?redirect=foobar");
+    Linking.openURL(`${process.env.EXPO_PUBLIC_WEB_URL}/login?redirect=${encodeURIComponent("peppermint://")}`);
   };
 
   const { user } = useAuthContext();
