@@ -1,10 +1,14 @@
 <script lang="ts">
+  import { page } from "$app/state";
+  import { getAuthContext } from "$lib/auth";
   // import Home from "svelte-ionicons/Home.svelte";
-  // import UserMenu from "$lib/layout/user-menu/index.svelte";
+  import UserMenu from "$lib/layout/user-menu/index.svelte";
   import Headphones from "$lib/components/logo/headphones.svelte";
   import Name from "$lib/components/logo/name.svelte";
   // import { userSession } from "$lib/userSessionStore";
   // import { page } from "$app/stores";
+
+  const { user } = getAuthContext();
 
   export let loading = false;
 </script>
@@ -36,17 +40,17 @@
       {/if}
     </div>
 
-    <!-- {#if !$page.url.pathname.includes("login")}
+    {#if !page.url.pathname.includes("login")}
       <div
         class="z-10 relative w-full flex items-center gap-4 justify-between p-4 min-[1100px]:px-0 min-[1100px]:justify-end max-w-[1100px] mx-auto"
       >
-        <a href="/" class="text-white">
+        <!-- <a href="/" class="text-white">
           <Home size="25" />
-        </a>
+        </a> -->
 
         <UserMenu />
       </div>
-    {/if} -->
+    {/if}
   </header>
   <div
     class="max-w-[1100px] mx-auto p-4 rounded-t-2xl min-[1100px]:rounded-none border-t bg-white relative -top-4 min-[1100px]:top-0"

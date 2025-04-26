@@ -5,12 +5,14 @@
 
   import { afterNavigate } from "$app/navigation";
 
-  // import { userSession } from "../../userSessionStore";
-  import LoggedOut from "./logged-out-menu.svelte";
   import { clickOutside } from "$lib/util";
+  import { getAuthContext } from "$lib/auth";
+
+  import LoggedOut from "./logged-out-menu.svelte";
   import ProfileMenu from "./profile-menu.svelte";
 
   const menuOpen = writable(false);
+  const { user } = getAuthContext();
 
   function toggleMenu() {
     menuOpen.update((current) => !current);
@@ -24,19 +26,19 @@
 <div class="relative flex items-center" use:clickOutside={() => menuOpen.set(false)}>
   <button class="outline-none" on:click={toggleMenu}>
     <div class="text-white">
-      <!-- {#if $userSession}
+      {#if $user}
         <Person size="24" class="outline-none" />
-      {:else} -->
-      <Menu size="32" class="outline-none" />
-      <!-- {/if} -->
+      {:else}
+        <Menu size="32" class="outline-none" />
+      {/if}
     </div>
   </button>
 
   {#if $menuOpen}
-    <!-- {#if $userSession}
+    {#if $user}
       <ProfileMenu />
-    {:else} -->
-    <LoggedOut />
-    <!-- {/if} -->
+    {:else}
+      <LoggedOut />
+    {/if}
   {/if}
 </div>

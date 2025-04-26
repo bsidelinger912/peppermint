@@ -21,7 +21,7 @@
       supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}?redirect=${redirectUrl}`,
+          redirectTo: `${window.location.origin}${redirectUrl ? `?redirect=${redirectUrl}` : ""}`,
         },
       });
     } catch (e) {

@@ -10,11 +10,13 @@
 
   import QueueIcon from "$lib/components/ds/icons/playlist.svelte";
   import { playlist } from "$lib/components/audio-player/store";
+  import { getAuthContext } from "$lib/auth";
 
   import MenuContents from "./menu-contents.svelte";
   import MenuItem from "./menu-item.svelte";
 
-  const copied = writable(false);
+  const { user, signOut } = getAuthContext();
+  // const copied = writable(false);
 
   // function copy() {
   //   if ($userSession?.address) {
@@ -31,13 +33,13 @@
     <div class="flex gap-1">
       <span class="w-24 font-semibold text-slate-700"> Username: </span>
       <span class="truncate text-slate-500">
-        {$userSession?.userName}
+        {$user?.email}
       </span>
     </div>
-    <div class="flex gap-1 items-center">
+    <!-- <div class="flex gap-1 items-center">
       <span class="w-24 flex-shrink-0 font-semibold text-slate-700"> Address: </span>
       <span class="truncate text-slate-500">
-        {$userSession?.address}
+        {$user?.address}
       </span>
       <button title="copy" class="outline-none" on:click={copy}>
         {#if $copied}
@@ -46,12 +48,12 @@
           <Copy size="16" class="hover:text-blue-600 outline-none" />
         {/if}
       </button>
-    </div>
+    </div> -->
   </div>
 
   <hr class="my-2" />
 
-  <button on:click={clearUserSession}>
+  <button on:click={signOut}>
     <MenuItem>
       <div slot="icon">
         <Logout size="20" />
@@ -71,14 +73,14 @@
     </a>
   {/if}
 
-  <a href="/about">
+  <!-- <a href="/about">
     <MenuItem>
       <div slot="icon">
         <About size="20" />
       </div>
       About
     </MenuItem>
-  </a>
+  </a> -->
 
   <a
     href="https://docs.google.com/forms/d/e/1FAIpQLSfZwvTdNJxc2pQrYlSP6B-XSLHH6DcEkW4OEvRmm5YH4sHlRQ/viewform"

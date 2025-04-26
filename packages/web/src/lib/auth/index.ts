@@ -1,6 +1,7 @@
 import { getContext, setContext } from "svelte";
-import { supabase } from "$lib/supabase";
+import { COOKIE_KEY, supabase } from "$lib/supabase";
 import type { User, Session, EmailOtpType } from "@supabase/supabase-js";
+import Cookies from "js-cookie";
 import { writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
 
@@ -28,7 +29,7 @@ const AUTH_CONTEXT_KEY = Symbol();
 //   }
 // }
 
-export function setAuthContext() {
+export function setAuthContext(supabaseUser: User | undefined) {
   if (browser) {
     const hash = window.location.hash;
     if (hash) {
@@ -40,7 +41,22 @@ export function setAuthContext() {
       const redirect = searchParams.get("redirect") as string;
 
       if (token && refreshToken) {
-        window.location.href = `${decodeURIComponent(redirect)}?token=${token}&refresh_token=${refreshToken}`;
+        if (redirect) {
+          window.location.href = `${decodeURIComponent(redirect)}?token=${token}&refresh_token=${refreshToken}`;
+        } else {
+          supabase.auth.setSession({ access_token: token, refresh_token: refreshToken });
+          Cookies.set(
+            COOKIE_KEY,
+            JSON.stringify({ access_token: token, refresh_token: refreshToken }),
+            {
+              path: "/",
+              // expires: 365,
+              sameSite: "lax",
+              domain: window.location.hostname == "localhost" ? "localhost" : "peppermint.music",
+            }
+          );
+        }
+
         // verifyOtp(token, type);
       }
 
@@ -85,13 +101,17 @@ export function setAuthContext() {
     signOut: async () => {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      Cookies.remove(COOKIE_KEY);
     },
   });
 
   // Initialize auth state from supabase session
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    user.set(session?.user ?? null);
-  });
+  // supabase.auth.getSession().then(({ data: { session } }) => {
+  //   user.set(session?.user ?? null);
+  // });
+  if (supabaseUser) {
+    user.set(supabaseUser);
+  }
 
   // Listen for auth state changes
   supabase.auth.onAuthStateChange((_event, session) => {
