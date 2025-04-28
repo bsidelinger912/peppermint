@@ -41,7 +41,7 @@
       </p>
     </div>
   {:else}
-    <div class="flex flex-col sm:flex-row gap-6">
+    <div class="flex flex-col sm:flex-row gap-4">
       <div class="sm:w-1/2 md:w-1/3">
         <AlbumCard album={code.album} />
       </div>
@@ -73,16 +73,14 @@
             </p>
           {/if}
         {:else}
-          <div class="flex justify-center w-full">
-            <div class="w-full max-w-[500px] flex flex-col">
-              <Button 
-                size="large"
-                on:click={mint} 
-                loading={$minting}
-              >
-                <span>Redeem</span>
-              </Button>
-            </div>
+          <div class="w-full max-w-[500px] flex flex-col">
+            <Button 
+              size="large"
+              on:click={mint} 
+              loading={$minting}
+            >
+              <span>Redeem</span>
+            </Button>
           </div>
         {/if}
       </div>

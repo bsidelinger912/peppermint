@@ -7,6 +7,7 @@
     "deploy-get-code": "supabase functions deploy get-code --project-ref vrkpvsbchkrpcggxknnj"
   },
   "dependencies": {
+    "@peppermint/shared": "workspace:*",
     "@supabase/functions-js": "^2.4.4",
     "@supabase/supabase-js": "^2.49.4"
   }

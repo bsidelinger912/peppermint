@@ -7,7 +7,7 @@ import type { PageLoad } from "./$types";
 
 export const load: PageLoad = async (event) => {
   const id = event.params.id;
-  const { data, error } = await supabase.functions.invoke<{ data: RedemptionCode }>("get-code", {
+  const { data, error } = await supabase.functions.invoke<RedemptionCode>("get-code", {
     body: { id },
   });
 
@@ -15,7 +15,7 @@ export const load: PageLoad = async (event) => {
     redirect(404, "/");
   } else {
     return {
-      redemptionCode: data.data,
+      redemptionCode: data,
     };
   }
 };

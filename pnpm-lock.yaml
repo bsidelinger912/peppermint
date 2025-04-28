@@ -195,6 +195,9 @@ importers:
 
   packages/supabase:
     dependencies:
+      '@peppermint/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@supabase/functions-js':
         specifier: ^2.4.4
         version: 2.4.4
