@@ -18,8 +18,4 @@ export const load: PageLoad = async (event) => {
       redemptionCode: data.data,
     };
   }
-
-  // return {
-  //   redemptionCode: id,
-  // };
 };

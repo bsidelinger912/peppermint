@@ -37,7 +37,7 @@
   {#if !$user}
     <div class="flex flex-col justify-center h-[200px]">
       <p class="text-center">
-        Congrats on your purchase, you'll need to <Link href={`/login?next=codes/${$page.params.id}`}>Log in</Link> to continue.
+        Congrats on your purchase, you'll need to <Link href={`/login?next=codes/${page.params.id}`}>Log in</Link> to continue.
       </p>
     </div>
   {:else}
