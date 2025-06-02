@@ -3,6 +3,7 @@
   import Logout from "svelte-ionicons/LogOut.svelte";
   import Copy from "svelte-ionicons/CopyOutline.svelte";
   import Check from "svelte-ionicons/Checkmark.svelte";
+  import Information from "svelte-ionicons/InformationCircle.svelte";
   import Help from "svelte-ionicons/HelpCircle.svelte";
   import About from "svelte-ionicons/InformationCircle.svelte";
 
@@ -91,6 +92,15 @@
         <Help size="20" />
       </div>
       Help
+    </MenuItem>
+  </a>
+
+  <a href="/privacy-policy">
+    <MenuItem>
+      <div slot="icon">
+        <Information size="20" />
+      </div>
+      Privacy policy
     </MenuItem>
   </a>
 </MenuContents>
