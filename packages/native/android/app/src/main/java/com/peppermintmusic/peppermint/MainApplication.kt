@@ -1,4 +1,4 @@
-package com.bsidelinger912.peppermint
+package com.peppermintmusic.peppermint
 
 import android.app.Application
 import android.content.res.Configuration

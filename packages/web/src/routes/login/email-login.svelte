@@ -17,13 +17,11 @@
     }
 
     loggingIn.set(true);
-    const { data, error } = await supabase.auth.signInWithOtp({ email: emailValue });
+    const { error } = await supabase.auth.signInWithOtp({ email: emailValue });
 
     if (error) {
       emailError.set(error.message);
     }
-
-    console.log("*****", data);
   }
 </script>
 

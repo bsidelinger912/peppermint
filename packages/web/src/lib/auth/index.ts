@@ -1,9 +1,10 @@
 import { getContext, setContext } from "svelte";
 import { COOKIE_KEY, supabase } from "$lib/supabase";
-import type { User, Session, EmailOtpType } from "@supabase/supabase-js";
+import type { EmailOtpType, Session, User } from "@supabase/supabase-js";
 import Cookies from "js-cookie";
-import { writable, type Writable } from "svelte/store";
+import { type Writable, writable } from "svelte/store";
 import { browser } from "$app/environment";
+import { goto } from "$app/navigation";
 
 type SignInResult = {
   user: User;
@@ -29,6 +30,36 @@ const AUTH_CONTEXT_KEY = Symbol();
 //   }
 // }
 
+function handleLogin(token: string, refreshToken: string) {
+  const searchParams = new URLSearchParams(window.location.search);
+  const redirect = searchParams.get("redirect") as string;
+
+  if (redirect) {
+    window.location.href = `${
+      decodeURIComponent(redirect)
+    }?token=${token}&refresh_token=${refreshToken}`;
+  } else {
+    Cookies.set(
+      COOKIE_KEY,
+      JSON.stringify({
+        access_token: token,
+        refresh_token: refreshToken,
+      }),
+      {
+        path: "/",
+        // expires: 365,
+        sameSite: "lax",
+        domain: window.location.hostname == "localhost"
+          ? "localhost"
+          : "peppermint.music",
+      },
+    );
+
+    // todo: send to dashboard when ready
+    goto("/");
+  }
+}
+
 export function setAuthContext(supabaseUser: User | undefined) {
   if (browser) {
     const hash = window.location.hash;
@@ -37,26 +68,12 @@ export function setAuthContext(supabaseUser: User | undefined) {
       const token = params.get("access_token");
       const refreshToken = params.get("refresh_token");
       // const type = params.get("type") as EmailOtpType;
-      const searchParams = new URLSearchParams(window.location.search);
-      const redirect = searchParams.get("redirect") as string;
 
       if (token && refreshToken) {
-        if (redirect) {
-          window.location.href = `${decodeURIComponent(redirect)}?token=${token}&refresh_token=${refreshToken}`;
-        } else {
-          supabase.auth.setSession({ access_token: token, refresh_token: refreshToken });
-          Cookies.set(
-            COOKIE_KEY,
-            JSON.stringify({ access_token: token, refresh_token: refreshToken }),
-            {
-              path: "/",
-              // expires: 365,
-              sameSite: "lax",
-              domain: window.location.hostname == "localhost" ? "localhost" : "peppermint.music",
-            }
-          );
-        }
-
+        supabase.auth.setSession({
+          access_token: token,
+          refresh_token: refreshToken,
+        });
         // verifyOtp(token, type);
       }
 
@@ -116,6 +133,10 @@ export function setAuthContext(supabaseUser: User | undefined) {
   // Listen for auth state changes
   supabase.auth.onAuthStateChange((_event, session) => {
     user.set(session?.user ?? null);
+
+    if (session) {
+      handleLogin(session.access_token, session.refresh_token);
+    }
   });
 }
 

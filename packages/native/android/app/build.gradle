@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.bsidelinger912.peppermint'
+    namespace 'com.peppermintmusic.peppermint'
     defaultConfig {
-        applicationId 'com.bsidelinger912.peppermint'
+        applicationId 'com.peppermintmusic.peppermint'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

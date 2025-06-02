@@ -8,8 +8,9 @@
 
   import EmailLogin from "./email-login.svelte";
   import { LogoGoogle } from "svelte-ionicons";
+  import PasswordLogin from "./password-login.svelte";
 
-  const loginMethod = writable<"email" | undefined>();
+  const loginMethod = writable<"email" | "password" | undefined>();
 
   async function loginWithGoogle() {
     const params = new URLSearchParams(window.location.search);
@@ -87,7 +88,16 @@
   <div class="flex flex-col gap-4 max-w-[600px] mx-auto">
     {#if $loginMethod === "email"}
       <EmailLogin />
+    {:else if $loginMethod === "password"}
+      <PasswordLogin />
     {:else}
+      <Button on:click={() => loginMethod.set("password")}>
+        <div class="flex items-center justify-center gap-4 text-lg">
+          <Mail />
+          Log in with password
+        </div>
+      </Button>
+
       <Button on:click={() => loginMethod.set("email")}>
         <div class="flex items-center justify-center gap-4 text-lg">
           <Mail />
