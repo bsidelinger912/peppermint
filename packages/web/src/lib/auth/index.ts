@@ -55,8 +55,8 @@ function handleLogin(token: string, refreshToken: string) {
       },
     );
 
-    // todo: send to dashboard when ready
-    goto("/");
+    // todo: do this right
+    // goto("/dashboard"); // todo: don't always redirect
   }
 }
 
