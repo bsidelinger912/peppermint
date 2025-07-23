@@ -11,10 +11,10 @@
 
   export let userOwnsAlbum: boolean;
   export let album: Album;
-  export let songs: Song[];
+  export let songs: (Song & { trackNumber: number })[];
   export let artist: Artist;
 
-  $: sortedSongs = songs; // todo: songs.sort((a, b) => (a.trackNumber || 0) - (b.trackNumber || 0))
+  $: sortedSongs = songs.sort((a, b) => (a.trackNumber || 0) - (b.trackNumber || 0))
 
   function play(e: MouseEvent) {
     e.stopPropagation();

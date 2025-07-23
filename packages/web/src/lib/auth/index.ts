@@ -131,7 +131,22 @@ export function setAuthContext(supabaseUser: User | undefined) {
   }
 
   // Listen for auth state changes
-  supabase.auth.onAuthStateChange((_event, session) => {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "TOKEN_REFRESHED") {
+      if (session) {
+        // storeSession({
+        //   access_token: session.access_token,
+        //   refresh_token: session.refresh_token,
+        // });
+        console.log("****** token refreshed ********");
+      }
+    } else if (event === "SIGNED_OUT") {
+      console.log("**** signed out ***");
+      user.set(null);
+      Cookies.remove(COOKIE_KEY);
+      goto("/login");
+    }
+
     user.set(session?.user ?? null);
 
     if (session) {

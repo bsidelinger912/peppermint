@@ -8,6 +8,7 @@
   import Link from "$lib/components/ds/link/index.svelte";
   import Button from "$lib/components/ds/button/index.svelte";
   import AlbumCard from "$lib/components/album-card/index.svelte";
+  import { supabase } from "$lib/supabase";
 
   const { user } = getAuthContext();
 
@@ -18,15 +19,36 @@
     minting.set(true);
 
     try {
-      // todo:
+      // Check if user is authenticated
+      if (!$user) {
+        throw new Error("User must be authenticated to mint NFT");
+      }
 
-      // const mintResult = await mintNFT({ recipient: $userSession?.address as string, redemptionCode: $page.params.id });
-      // const d = mintResult.data as { success: Boolean, transactions: string[] };
-      // if ($data) $data.redeemedBy = $userSession?.address;
-      // reloadUserTokens();
-      // goto("/profile");
+      // Get the current session to ensure we have a valid token
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session) {
+        throw new Error("No valid session found");
+      }
+
+      const result = await supabase.functions.invoke("mint-nft", {
+        body: { redemption_code: page.params.id },
+      });
+
+      console.log("******* result");
+      console.log(result);
+
+      if (result.error) {
+        throw new Error(result.error.message || "Failed to mint NFT");
+      }
+
+      // Handle successful minting
+      // You might want to redirect or update the UI here
+      console.log("NFT minted successfully:", result.data);
+      
     } catch (e) {
-      // TODO
+      console.error("Error minting NFT:", e);
+      // TODO: Show error to user
     } finally {
       minting.set(false);
     }

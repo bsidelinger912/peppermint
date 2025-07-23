@@ -31,19 +31,19 @@
     [{ table: "album", filter: `id=eq.${$page.params.id}` }]
   );
 
-
-  // $: userOwnsAlbum = $userTokens?.some((token) => token.id === $data?.id) || false;
+  // TODO: add back
+  $: userOwnsAlbum = true; // $userTokens?.some((token) => token.id === $data?.id) || false;
 </script>
 
 {#if $album}
   {@const artist = $album.artist_to_album[0].artist}
-  {@const songs = $album.song_to_album.map((doc) => doc.song)}
+  {@const songs = $album.song_to_album.map((doc) => ({ ...doc.song, trackNumber: doc.track_number }))}
   <HeroLayout>
     <div slot="hero" class="h-full relative" style="background-image: url('{artist.hero_image}'); background-size: cover; background-position: center;">
       <Hero album={$album} songs={songs} artist={artist} />
     </div>
       
-    <Details album={$album} songs={songs} artist={artist} userOwnsAlbum={true} />
+    <Details album={$album} songs={songs} artist={artist} {userOwnsAlbum} />
   </HeroLayout>
 {:else}
   <HeroLayout loading={true} />
