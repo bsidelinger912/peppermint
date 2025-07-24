@@ -34,29 +34,26 @@ function handleLogin(token: string, refreshToken: string) {
   const searchParams = new URLSearchParams(window.location.search);
   const redirect = searchParams.get("redirect") as string;
 
+  Cookies.set(
+    COOKIE_KEY,
+    JSON.stringify({
+      access_token: token,
+      refresh_token: refreshToken,
+    }),
+    {
+      path: "/",
+      // expires: 365,
+      sameSite: "lax",
+      domain: window.location.hostname == "localhost"
+        ? "localhost"
+        : "peppermint.music",
+    },
+  );
+
   if (redirect) {
     window.location.href = `${
       decodeURIComponent(redirect)
     }?token=${token}&refresh_token=${refreshToken}`;
-  } else {
-    Cookies.set(
-      COOKIE_KEY,
-      JSON.stringify({
-        access_token: token,
-        refresh_token: refreshToken,
-      }),
-      {
-        path: "/",
-        // expires: 365,
-        sameSite: "lax",
-        domain: window.location.hostname == "localhost"
-          ? "localhost"
-          : "peppermint.music",
-      },
-    );
-
-    // todo: do this right
-    // goto("/dashboard"); // todo: don't always redirect
   }
 }
 
@@ -141,7 +138,6 @@ export function setAuthContext(supabaseUser: User | undefined) {
         console.log("****** token refreshed ********");
       }
     } else if (event === "SIGNED_OUT") {
-      console.log("**** signed out ***");
       user.set(null);
       Cookies.remove(COOKIE_KEY);
       goto("/login");
