@@ -9,6 +9,7 @@
   import Button from "$lib/components/ds/button/index.svelte";
   import AlbumCard from "$lib/components/album-card/index.svelte";
   import { supabase } from "$lib/supabase";
+  import { goto } from "$app/navigation";
 
   const { user } = getAuthContext();
 
@@ -35,16 +36,13 @@
         body: { redemption_code: page.params.id },
       });
 
-      console.log("******* result");
-      console.log(result);
-
       if (result.error) {
         throw new Error(result.error.message || "Failed to mint NFT");
       }
 
       // Handle successful minting
       // You might want to redirect or update the UI here
-      console.log("NFT minted successfully:", result.data);
+      goto("/dashboard");
       
     } catch (e) {
       console.error("Error minting NFT:", e);

@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "deploy-get-code": "supabase functions deploy get-code --project-ref vrkpvsbchkrpcggxknnj",
-    "deploy-mint-nft": "supabase functions deploy mint-nft --project-ref vrkpvsbchkrpcggxknnj"
+    "deploy-mint-nft": "supabase functions deploy mint-nft --project-ref vrkpvsbchkrpcggxknnj",
+    "deploy-subgraph-webhook": "supabase functions deploy subgraph-webhook --project-ref vrkpvsbchkrpcggxknnj"
   },
   "dependencies": {
     "@supabase/functions-js": "^2.4.4",

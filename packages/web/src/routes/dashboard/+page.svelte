@@ -29,7 +29,7 @@
       .eq("user_id", user.id);
   };
 
-  const { data: tokens } = queryMany<QueryResult>(query);
+  const { data: tokens } = queryMany<QueryResult>(query, [ { table: "token" } ]);
 </script>
 
 <HeroLayout>

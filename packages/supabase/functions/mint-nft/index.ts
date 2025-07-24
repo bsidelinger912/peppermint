@@ -172,9 +172,16 @@ Deno.serve(async (req) => {
       data: nftContract.interface.encodeFunctionData("mintNFT", [user_address]),
     });
 
-    const result = await transaction.wait();
+    // Get the transaction hash immediately
+    const transactionHash = transaction.hash;
+    console.log(`Transaction sent with hash: ${transactionHash}`);
 
-    console.log(`transaction complete, result: ${result}`);
+    // Wait for the transaction to be mined
+    const receipt = await transaction.wait();
+
+    console.log(
+      `Transaction confirmed with receipt: ${JSON.stringify(receipt, null, 2)}`,
+    );
 
     // Mark the redemption code as redeemed by the user
     const { error: updateError } = await supabase
@@ -196,7 +203,7 @@ Deno.serve(async (req) => {
       JSON.stringify({
         success: true,
         data: {
-          transactionHash: result.transactionHash,
+          transactionHash: transactionHash,
           message: "NFT minted successfully",
         },
       }),
