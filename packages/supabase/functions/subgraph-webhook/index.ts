@@ -195,16 +195,11 @@ Deno.serve(async (req) => {
       );
     }
 
-    console.log("raw token owner: ", tokenData.owner);
-
     // Normalize address format (convert \\\\x to 0x)
     const normalizedOwner = normalizeAddress(tokenData.owner);
     const normalizedContractAddress = normalizeAddress(
       tokenData.contract_address,
     );
-
-    console.log("After replacement - owner:", normalizedOwner);
-    console.log("After replacement - contract:", normalizedContractAddress);
 
     // Look up user_id from blockchain_address table using owner address (case-insensitive)
     const { data: blockchainAddress, error: addressError } = await supabase
