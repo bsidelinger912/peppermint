@@ -34,29 +34,26 @@ function handleLogin(token: string, refreshToken: string) {
   const searchParams = new URLSearchParams(window.location.search);
   const redirect = searchParams.get("redirect") as string;
 
+  Cookies.set(
+    COOKIE_KEY,
+    JSON.stringify({
+      access_token: token,
+      refresh_token: refreshToken,
+    }),
+    {
+      path: "/",
+      // expires: 365,
+      sameSite: "lax",
+      domain: window.location.hostname == "localhost"
+        ? "localhost"
+        : "peppermint.music",
+    },
+  );
+
   if (redirect) {
     window.location.href = `${
       decodeURIComponent(redirect)
     }?token=${token}&refresh_token=${refreshToken}`;
-  } else {
-    Cookies.set(
-      COOKIE_KEY,
-      JSON.stringify({
-        access_token: token,
-        refresh_token: refreshToken,
-      }),
-      {
-        path: "/",
-        // expires: 365,
-        sameSite: "lax",
-        domain: window.location.hostname == "localhost"
-          ? "localhost"
-          : "peppermint.music",
-      },
-    );
-
-    // todo: send to dashboard when ready
-    goto("/");
   }
 }
 
@@ -131,7 +128,21 @@ export function setAuthContext(supabaseUser: User | undefined) {
   }
 
   // Listen for auth state changes
-  supabase.auth.onAuthStateChange((_event, session) => {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "TOKEN_REFRESHED") {
+      if (session) {
+        // storeSession({
+        //   access_token: session.access_token,
+        //   refresh_token: session.refresh_token,
+        // });
+        console.log("****** token refreshed ********");
+      }
+    } else if (event === "SIGNED_OUT") {
+      user.set(null);
+      Cookies.remove(COOKIE_KEY);
+      goto("/login");
+    }
+
     user.set(session?.user ?? null);
 
     if (session) {

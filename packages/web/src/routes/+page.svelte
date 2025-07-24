@@ -1,5 +1,14 @@
 <script lang="ts">
+  import { browser } from "$app/environment";
+  import { goto } from "$app/navigation";
+  import { getAuthContext } from "$lib/auth";
 	import HeroLayout from "$lib/layout/hero-layout.svelte";
+
+  const { user } = getAuthContext();
+
+  $: if ($user && browser) {
+    goto("/dashboard");
+  }
 </script>
 
 <HeroLayout>

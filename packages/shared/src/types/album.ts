@@ -6,4 +6,5 @@ export type Album = {
   description?: string;
   image?: string;
   release_date?: string;
+  contract?: string;
 };
